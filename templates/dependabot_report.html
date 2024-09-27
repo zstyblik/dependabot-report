@@ -130,7 +130,7 @@
 {%       for alert_num, alert in repo.alerts.items() %}
                                         <tr>
                                             <td>
-                                                <span  style="margin-left: 4pt">#{{ alert_num }}</span>
+                                                <span style="margin-left: 4pt">#{{ alert_num }}</span>
                                             </td>
                                             <td>
                                                 {{ alert.state }}
@@ -160,13 +160,13 @@
 {%     elif not repo.alerts_error and not repo.alerts %}
                                         <tr>
                                             <td colspan="5">
-                                                <span  style="margin-left: 4pt">There seem to be no dependabot alerts.</span>
+                                                <span style="margin-left: 4pt">There seem to be no dependabot alerts.</span>
                                             </td>
                                         </tr>
 {%     elif repo.alerts_error %}
                                         <tr>
                                             <td colspan="5">
-                                                <span  style="margin-left: 4pt">Either dependabot isn't enabled or an error has occurred.</span>
+                                                <span style="margin-left: 4pt">Either dependabot isn't enabled or an error has occurred.</span>
                                             </td>
                                         </tr>
 {%     endif %}
