@@ -99,7 +99,7 @@
                                 <h4 class="text-left">
                                     {{ owner.login }}
                                 </h4>
-                                <table class="table table-sm">
+                                <table class="table table-sm table-hover">
                                     <thead class="hidden">
                                         <tr>
                                             <th>
@@ -141,8 +141,19 @@
                                             <td>
                                                 {{ alert.created_at.strftime("%Y-%m-%d %H:%M:%S%z") }}
                                             </td>
+{%         if alert.security_advisory.severity == "critical" %}
+{%           set alert_severity_class="badge text-bg-danger" %}
+{%         elif alert.security_advisory.severity == "high" %}
+{%           set alert_severity_class="badge text-bg-danger" %}
+{%         elif alert.security_advisory.severity == "medium" %}
+{%           set alert_severity_class="badge text-bg-warning" %}
+{%         elif alert.security_advisory.severity == "low" %}
+{%           set alert_severity_class="badge text-bg-info" %}
+{%         else %}
+{%           set alert_severity_class="unknow" %}
+{%         endif %}
                                             <td>
-                                                {{ alert.security_advisory.severity }}
+                                                <span class="{{ alert_severity_class }}">{{ alert.security_advisory.severity }}</span>
                                             </td>
                                         </tr>
 {%       endfor %}
