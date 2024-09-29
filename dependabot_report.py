@@ -106,15 +106,16 @@ def get_dependabot_data(
         affiliation=repo_affiliation, sort="full_name", direction="asc"
     )
     for repo in repos:
-        namespace = repo.owner
-        if exclude_github_owner and repo.owner.login in exclude_github_owner:
-            logging.debug(
-                "Skip '%s' based on GitHub owner filter.", repo.owner.login
-            )
+        namespace = repo.owner.login
+        if exclude_github_owner and namespace in exclude_github_owner:
+            logging.debug("Skip '%s' based on GitHub owner filter.", namespace)
             continue
 
         if namespace not in context["namespaces"]:
-            context["namespaces"][namespace] = {}
+            context["namespaces"][namespace] = {
+                "owner": repo.owner,
+                "repos": {},
+            }
 
         if exclude_forks is True and repo.fork is True:
             logging.debug(
@@ -149,7 +150,7 @@ def get_dependabot_data(
         if repo_detail["fork"]:
             repo_detail["html_filters"].add("github-repo-fork")
 
-        context["namespaces"][namespace][repo.full_name] = repo_detail
+        context["namespaces"][namespace]["repos"][repo.full_name] = repo_detail
 
     return context
 
