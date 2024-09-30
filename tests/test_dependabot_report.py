@@ -91,9 +91,11 @@ def test_get_dependabot_data_no_filter(mock_github):
     # Mocked Alerts
     mock_alert1 = Mock()
     mock_alert1.number = 10
+    mock_alert1.security_advisory.severity = "critical"
 
     mock_alert2 = Mock()
     mock_alert2.number = 21
+    mock_alert2.security_advisory.severity = "high"
     # Mocked Owners
     mock_owner1 = Mock(login="zstyblik1")
     mock_owner2 = Mock(login="zstyblik2")
@@ -154,6 +156,12 @@ def test_get_dependabot_data_no_filter(mock_github):
                             mock_alert2.number: mock_alert2,
                         },
                         "alerts_error": False,
+                        "alerts_stats": {
+                            "critical": 1,
+                            "high": 1,
+                            "low": 0,
+                            "medium": 0,
+                        },
                         "fork": False,
                         "html_url": "https://dbr1.example.com",
                         "html_filters": set(),
@@ -161,6 +169,12 @@ def test_get_dependabot_data_no_filter(mock_github):
                     "dependabot-report3": {
                         "alerts": {},
                         "alerts_error": True,
+                        "alerts_stats": {
+                            "critical": 0,
+                            "high": 0,
+                            "low": 0,
+                            "medium": 0,
+                        },
                         "fork": False,
                         "html_filters": {
                             "github-repo-empty",
@@ -176,6 +190,12 @@ def test_get_dependabot_data_no_filter(mock_github):
                     "dependabot-report2": {
                         "alerts": {},
                         "alerts_error": False,
+                        "alerts_stats": {
+                            "critical": 0,
+                            "high": 0,
+                            "low": 0,
+                            "medium": 0,
+                        },
                         "fork": True,
                         "html_url": "https://dbr2.example.com",
                         "html_filters": {
@@ -207,9 +227,11 @@ def test_get_dependabot_data_filter_owner(mock_github):
     # Mocked Alerts
     mock_alert1 = Mock()
     mock_alert1.number = 10
+    mock_alert1.security_advisory.severity = "high"
 
     mock_alert2 = Mock()
     mock_alert2.number = 21
+    mock_alert2.security_advisory.severity = "low"
     # Mocked Owners
     mock_owner1 = Mock(login="zstyblik1")
     mock_owner2 = Mock(login="zstyblik2")
@@ -256,6 +278,12 @@ def test_get_dependabot_data_filter_owner(mock_github):
                     "dependabot-report1": {
                         "alerts": {},
                         "alerts_error": False,
+                        "alerts_stats": {
+                            "critical": 0,
+                            "high": 0,
+                            "low": 0,
+                            "medium": 0,
+                        },
                         "fork": False,
                         "html_url": "https://dbr1.example.com",
                         "html_filters": {"github-repo-empty"},
@@ -284,7 +312,9 @@ def test_get_dependabot_data_filter_forks(mock_github):
     """
     # Mocked Alerts
     mock_alert1 = Mock(number=10)
+    mock_alert1.security_advisory.severity = "medium"
     mock_alert2 = Mock(number=21)
+    mock_alert2.security_advisory.severity = "critical"
     # Mocked Owners
     mock_owner1 = Mock(login="zstyblik1")
     mock_owner2 = Mock(login="zstyblik2")
@@ -335,6 +365,12 @@ def test_get_dependabot_data_filter_forks(mock_github):
                     "dependabot-report1": {
                         "alerts": {mock_alert1.number: mock_alert1},
                         "alerts_error": False,
+                        "alerts_stats": {
+                            "critical": 0,
+                            "high": 0,
+                            "low": 0,
+                            "medium": 1,
+                        },
                         "fork": False,
                         "html_url": "https://dbr1.example.com",
                         "html_filters": set(),

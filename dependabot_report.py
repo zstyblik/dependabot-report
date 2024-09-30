@@ -126,15 +126,22 @@ def get_dependabot_data(
         repo_detail = {
             "alerts": {},
             "alerts_error": False,
+            "alerts_stats": {
+                "critical": 0,
+                "high": 0,
+                "medium": 0,
+                "low": 0,
+            },
             "fork": repo.fork,
             "html_url": repo.html_url,
             "html_filters": set(),
         }
         try:
             dependabot_alerts = repo.get_dependabot_alerts(state="open")
-            repo_detail["alerts"] = {
-                alert.number: alert for alert in dependabot_alerts
-            }
+            for alert in dependabot_alerts:
+                repo_detail["alerts"][alert.number] = alert
+                stats_key = str(alert.security_advisory.severity).lower()
+                repo_detail["alerts_stats"][stats_key] += 1
         except github.GithubException as exception:
             if exception.status == 403:
                 # NOTE(zstyblik): 403 most likely means that dependabot
