@@ -126,10 +126,10 @@
                                                 <a href="{{ repo.html_url }}">{{ repo_name }}</a>
 {%     if not repo.alerts_error %}
                                                 <span style="float: right">
-                                                    <span title="Critical" class="badge text-bg-danger">{{ repo.alerts_stats.critical }}</span>
-                                                    <span title="High" class="badge text-bg-warning">{{ repo.alerts_stats.high }}</span>
-                                                    <span title="Medium" class="badge text-bg-warning bg-warning-subtle">{{ repo.alerts_stats.medium }}</span>
-                                                    <span title="Low" class="badge text-bg-info bg-info-subtle">{{ repo.alerts_stats.low }}</span>
+                                                    <span title="Critical severity" class="badge text-bg-danger">{{ repo.alerts_stats.critical }}</span>
+                                                    <span title="High severity" class="badge text-bg-warning">{{ repo.alerts_stats.high }}</span>
+                                                    <span title="Medium severity" class="badge text-bg-warning bg-warning-subtle">{{ repo.alerts_stats.medium }}</span>
+                                                    <span title="Low severity" class="badge text-bg-info bg-info-subtle">{{ repo.alerts_stats.low }}</span>
                                                 </span>
 {%     endif %}
                                             </td>
