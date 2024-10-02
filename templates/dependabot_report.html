@@ -112,10 +112,10 @@
                                                 Description
                                             </th>
                                             <th>
-                                                Created at
+                                                Severity
                                             </th>
                                             <th>
-                                                Severity
+                                                Created at
                                             </th>
                                         </tr>
                                     </thead>
@@ -131,10 +131,12 @@
 {%   for repo_name, repo in namespace_data.repos.items() %}
                                     <tbody>
                                         <tr class="{{ repo.html_filters | join(' ') if repo.html_filters else 'github-repo-nofilter' }}">
-                                            <td colspan="5">
+                                            <td colspan="{{ '5' if repo.alerts_error else '3' }}">
                                                 <a href="{{ repo.html_url }}">{{ repo_name }}</a>
 {%     if not repo.alerts_error %}
-                                                <span style="float: right">
+                                            </td>
+                                            <td colspan="2">
+                                                <span>
                                                     <span title="Critical severity" class="badge text-bg-danger">{{ repo.alerts_stats.critical }}</span>
                                                     <span title="High severity" class="badge text-bg-warning">{{ repo.alerts_stats.high }}</span>
                                                     <span title="Medium severity" class="badge text-bg-warning bg-warning-subtle">{{ repo.alerts_stats.medium }}</span>
@@ -155,11 +157,8 @@
                                             <td>
                                                 <a href="{{ alert.html_url }}">{{ alert.security_advisory.summary }}</a>
 {%         if alert.dependency and alert.dependency.package %}
-                                                <br>Vulnerability detected in {{ alert.dependency.package.name }} ({{ alert.dependency.package.ecosystem }}) - {{ alert.dependency.manifest_path }}
+                                                <br><small>Vulnerability detected in {{ alert.dependency.package.name }} ({{ alert.dependency.package.ecosystem }}) - {{ alert.dependency.manifest_path }}</small>
 {%         endif %}
-                                            </td>
-                                            <td>
-                                                {{ alert.created_at.strftime("%Y-%m-%d %H:%M:%S%z") }}
                                             </td>
 {%         if alert.security_advisory.severity == "critical" %}
 {%           set alert_severity_class="badge text-bg-danger" %}
@@ -174,6 +173,9 @@
 {%         endif %}
                                             <td>
                                                 <span class="{{ alert_severity_class }}">{{ alert.security_advisory.severity }}</span>
+                                            </td>
+                                            <td>
+                                                {{ alert.created_at.strftime("%Y-%m-%d %H:%M:%S%z") }}
                                             </td>
                                         </tr>
 {%       endfor %}
