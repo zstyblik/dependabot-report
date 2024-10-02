@@ -119,6 +119,15 @@
                                             </th>
                                         </tr>
                                     </thead>
+{%   if not namespace_data.repos %}
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5">
+                                                {{ namespace_data.owner.login }} either has no repositories or access is blocked.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+{%   endif %}
 {%   for repo_name, repo in namespace_data.repos.items() %}
                                     <tbody>
                                         <tr class="{{ repo.html_filters | join(' ') if repo.html_filters else 'github-repo-nofilter' }}">
