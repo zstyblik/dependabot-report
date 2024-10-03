@@ -7,7 +7,7 @@ cd "$(dirname "${0}")/.."
 python3 -m flake8 \
     . \
     --ignore=W503 \
-    --application-import-names="app,settings" \
+    --application-import-names="dependabot_report,lib" \
     --import-order-style=pycharm \
     --max-line-length=80 \
     --show-source \
