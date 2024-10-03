@@ -156,6 +156,12 @@
                                             </td>
                                             <td>
                                                 <a href="{{ alert.html_url }}">{{ alert.security_advisory.summary }}</a>
+{%         if alert is has_cisa_cwe %}
+                                                <small> <span class="badge text-bg-secondary">CISA</span></small>
+{%         endif %}
+{%         if alert is has_owasp_cwe %}
+                                                <small> <span class="badge text-bg-secondary">OWASP</span></small>
+{%         endif %}
 {%         if alert.dependency and alert.dependency.package %}
                                                 <br><small>Vulnerability detected in {{ alert.dependency.package.name }} ({{ alert.dependency.package.ecosystem }}) - {{ alert.dependency.manifest_path }}</small>
 {%         endif %}
