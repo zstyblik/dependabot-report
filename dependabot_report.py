@@ -20,6 +20,9 @@ from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import select_autoescape
 
+from lib.cisa import CWE_CISA_KEV_2023
+from lib.owasp import CWE_OWASP_2021
+
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 TEMPLATE_FNAME = os.path.join(
     SCRIPT_PATH, "templates", "dependabot_report.html"
@@ -162,6 +165,38 @@ def get_dependabot_data(
     return context
 
 
+def has_cisa_cwe(alert):
+    """Check whether alert's CWE are in CISA KEV lookup table."""
+    if not alert.security_advisory:
+        return False
+
+    if not alert.security_advisory.cwes:
+        return False
+
+    for cwe in alert.security_advisory.cwes:
+        cwe_id = str(cwe.cwe_id).upper()
+        if cwe_id in CWE_CISA_KEV_2023:
+            return True
+
+    return False
+
+
+def has_owasp_cwe(alert):
+    """Check whether alert's CWE are in OWASP lookup table."""
+    if not alert.security_advisory:
+        return False
+
+    if not alert.security_advisory.cwes:
+        return False
+
+    for cwe in alert.security_advisory.cwes:
+        cwe_id = str(cwe.cwe_id).upper()
+        if cwe_id in CWE_OWASP_2021:
+            return True
+
+    return False
+
+
 def main():
     """Initialize, fetch data from GH and render HTML report."""
     timer_start = time.perf_counter()
@@ -294,6 +329,8 @@ def render_template(context, template_fname, fhandle):
         loader=FileSystemLoader(base_path),
         autoescape=select_autoescape(),
     )
+    jinja_env.tests["has_cisa_cwe"] = has_cisa_cwe
+    jinja_env.tests["has_owasp_cwe"] = has_owasp_cwe
     template = jinja_env.get_template(filename)
     fhandle.write(template.render(context))
 
