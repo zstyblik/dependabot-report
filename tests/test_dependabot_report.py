@@ -9,7 +9,7 @@ from unittest.mock import patch
 import pytest
 from github import GithubException
 
-import dependabot_report  # noqa: I100,I202
+import dependabot_report
 
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
