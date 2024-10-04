@@ -20,6 +20,15 @@
         .hidden {
             display: none;
         }
+        .theader {
+            position: sticky;
+            top: 0;
+        }
+        @media print {
+            .theader {
+                position: static;
+            }
+        }
     </style>
 </head>
 <body>
@@ -100,21 +109,27 @@
                                     {{ namespace_data.owner.login }}
                                 </h4>
                                 <table class="table table-sm table-hover">
-                                    <thead class="hidden">
+                                    <thead>
                                         <tr>
-                                            <th>
+                                            <th class="theader" scope="col">
                                                 #
                                             </th>
-                                            <th>
-                                                Alert state
-                                            </th>
-                                            <th>
-                                                Description
-                                            </th>
-                                            <th>
+                                            <th class="theader" scope="col">
                                                 Severity
                                             </th>
-                                            <th>
+                                            <th class="theader" scope="col">
+                                                Description
+                                            </th>
+                                            <th class="theader" scope="col">
+                                                Package
+                                            </th>
+                                            <th class="theader" scope="col">
+                                                Ecosystem
+                                            </th>
+                                            <th class="theader" scope="col">
+                                                Manifest path
+                                            </th>
+                                            <th class="theader" scope="col">
                                                 Created at
                                             </th>
                                         </tr>
@@ -122,7 +137,7 @@
 {%   if not namespace_data.repos %}
                                     <tbody>
                                         <tr>
-                                            <td colspan="5">
+                                            <td colspan="7">
                                                 {{ namespace_data.owner.login }} either has no repositories or access is blocked.
                                             </td>
                                         </tr>
@@ -131,18 +146,8 @@
 {%   for repo_name, repo in namespace_data.repos.items() %}
                                     <tbody>
                                         <tr class="{{ repo.html_filters | join(' ') if repo.html_filters else 'github-repo-nofilter' }}">
-                                            <td colspan="{{ '5' if repo.alerts_error else '3' }}">
+                                            <td colspan="7">
                                                 <a href="{{ repo.html_url }}">{{ repo_name }}</a>
-{%     if not repo.alerts_error %}
-                                            </td>
-                                            <td colspan="2">
-                                                <span>
-                                                    <span title="Critical severity" class="badge text-bg-danger">{{ repo.alerts_stats.critical }}</span>
-                                                    <span title="High severity" class="badge text-bg-warning">{{ repo.alerts_stats.high }}</span>
-                                                    <span title="Medium severity" class="badge text-bg-warning bg-warning-subtle">{{ repo.alerts_stats.medium }}</span>
-                                                    <span title="Low severity" class="badge text-bg-info bg-info-subtle">{{ repo.alerts_stats.low }}</span>
-                                                </span>
-{%     endif %}
                                             </td>
                                         </tr>
 {%     if repo.alerts %}
@@ -150,21 +155,6 @@
                                         <tr>
                                             <td>
                                                 <span style="margin-left: 4pt">#{{ alert_num }}</span>
-                                            </td>
-                                            <td>
-                                                {{ alert.state }}
-                                            </td>
-                                            <td>
-                                                <a href="{{ alert.html_url }}">{{ alert.security_advisory.summary }}</a>
-{%         if alert is has_cisa_cwe %}
-                                                <small> <span class="badge text-bg-secondary">CISA</span></small>
-{%         endif %}
-{%         if alert is has_owasp_cwe %}
-                                                <small> <span class="badge text-bg-secondary">OWASP</span></small>
-{%         endif %}
-{%         if alert.dependency and alert.dependency.package %}
-                                                <br><small>Vulnerability detected in {{ alert.dependency.package.name }} ({{ alert.dependency.package.ecosystem }}) - {{ alert.dependency.manifest_path }}</small>
-{%         endif %}
                                             </td>
 {%         if alert.security_advisory.severity == "critical" %}
 {%           set alert_severity_class="badge text-bg-danger" %}
@@ -181,20 +171,58 @@
                                                 <span class="{{ alert_severity_class }}">{{ alert.security_advisory.severity }}</span>
                                             </td>
                                             <td>
+                                                <a href="{{ alert.html_url }}">{{ alert.security_advisory.summary }}</a>
+{%         if alert is has_cisa_cwe %}
+                                                <small> <span class="badge text-bg-secondary">CISA</span></small>
+{%         endif %}
+{%         if alert is has_owasp_cwe %}
+                                                <small> <span class="badge text-bg-secondary">OWASP</span></small>
+{%         endif %}
+                                            </td>
+                                            <td>
+{%         if alert.dependency and alert.dependency.package %}
+                                                {{ alert.dependency.package.name }}
+{%         endif %}
+                                            </td>
+                                            <td>
+{%         if alert.dependency and alert.dependency.package %}
+                                                {{ alert.dependency.package.ecosystem }}
+{%         endif %}
+                                            </td>
+                                            <td>
+{%         if alert.dependency %}
+                                                {{ alert.dependency.manifest_path }}
+{%         endif %}
+                                            </td>
+                                            <td>
                                                 {{ alert.created_at.strftime("%Y-%m-%d %H:%M:%S%z") }}
                                             </td>
                                         </tr>
 {%       endfor %}
 {%     elif not repo.alerts_error and not repo.alerts %}
                                         <tr>
-                                            <td colspan="5">
+                                            <td colspan="7">
                                                 <span style="margin-left: 4pt">There seem to be no dependabot alerts.</span>
                                             </td>
                                         </tr>
 {%     elif repo.alerts_error %}
                                         <tr>
-                                            <td colspan="5">
+                                            <td colspan="7">
                                                 <span style="margin-left: 4pt">Either dependabot isn't enabled or an error has occurred.</span>
+                                            </td>
+                                        </tr>
+{%     endif %}
+{%     if not repo.alerts_error %}
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <td colspan="6">
+                                                <span>
+                                                    <span title="Critical severity" class="badge text-bg-danger">{{ repo.alerts_stats.critical }}</span>
+                                                    <span title="High severity" class="badge text-bg-warning">{{ repo.alerts_stats.high }}</span>
+                                                    <span title="Medium severity" class="badge text-bg-warning bg-warning-subtle">{{ repo.alerts_stats.medium }}</span>
+                                                    <span title="Low severity" class="badge text-bg-info bg-info-subtle">{{ repo.alerts_stats.low }}</span>
+                                                </span>
                                             </td>
                                         </tr>
 {%     endif %}
