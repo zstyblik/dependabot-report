@@ -25,6 +25,9 @@
             top: 0;
         }
         @media print {
+            .no-print {
+                display: none;
+            }
             .theader {
                 position: static;
             }
@@ -50,7 +53,7 @@
                     <div class="col-md-2">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row no-print">
                     <div class="col-md-2">
                     </div>
                     <div class="col-md-8">
