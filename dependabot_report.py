@@ -40,6 +40,9 @@ class GitHubProviderException(Exception):
 
 def calc_log_level(count: int) -> int:
     """Return logging log level as int based on count."""
+    if count < 0:
+        count = 0
+
     log_level = 40 - count * 10
     log_level = max(log_level, 10)
     return log_level
