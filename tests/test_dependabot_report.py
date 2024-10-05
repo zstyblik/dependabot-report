@@ -389,3 +389,75 @@ def test_get_dependabot_data_filter_forks(mock_github):
 
     assert ctx == expected_ctx
     assert expected_guser_calls == mock_guser.mock_calls
+
+
+@pytest.mark.parametrize(
+    "cwes,expected",
+    [
+        # No CWEs
+        ([], False),
+        # Not on the list
+        ([Mock(cwe_id="CWE-788")], False),
+        # One matching
+        (
+            [
+                Mock(cwe_id="CWE-788"),
+                Mock(cwe_id="CWE-787"),
+                Mock(cwe_id="CWE-999"),
+            ],
+            True,
+        ),
+        # Two matching(not that it matters)
+        (
+            [
+                Mock(cwe_id="CWE-788"),
+                Mock(cwe_id="CWE-787"),
+                Mock(cwe_id="CWE-999"),
+                Mock(cwe_id="CWE-79"),
+            ],
+            True,
+        ),
+    ],
+)
+def test_has_cisa_cwe(cwes, expected):
+    """Test that has_cisa_cwe() returns result as expected."""
+    mock_alert = Mock()
+    mock_alert.security_advisory.cwes = cwes
+    result = dependabot_report.has_cisa_cwe(mock_alert)
+    assert result == expected
+
+
+@pytest.mark.parametrize(
+    "cwes,expected",
+    [
+        # No CWEs
+        ([], False),
+        # Not on the list
+        ([Mock(cwe_id="CWE-788")], False),
+        # Match one
+        (
+            [
+                Mock(cwe_id="CWE-788"),
+                Mock(cwe_id="CWE-787"),
+                Mock(cwe_id="CWE-100"),
+            ],
+            True,
+        ),
+        # Two matching(not that it matters)
+        (
+            [
+                Mock(cwe_id="CWE-788"),
+                Mock(cwe_id="CWE-787"),
+                Mock(cwe_id="CWE-100"),
+                Mock(cwe_id="CWE-79"),
+            ],
+            True,
+        ),
+    ],
+)
+def test_has_owasp_cwe(cwes, expected):
+    """Test that has_owasp_cwe() returns result as expected."""
+    mock_alert = Mock()
+    mock_alert.security_advisory.cwes = cwes
+    result = dependabot_report.has_owasp_cwe(mock_alert)
+    assert result == expected
