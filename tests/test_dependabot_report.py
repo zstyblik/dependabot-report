@@ -17,6 +17,7 @@ SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 @pytest.mark.parametrize(
     "count,expected_log_level",
     [
+        (-10, 40),
         (0, 40),
         (1, 30),
         (2, 20),
