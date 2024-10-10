@@ -70,4 +70,4 @@ MIT
 [PyGithub]: https://pypi.org/project/PyGithub/
 [bootstrap]: https://getbootstrap.com
 [GitHub avatars]: https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/personalizing-your-profile
-[dependabot_report_demo]: https://github.com/user-attachments/assets/e294b252-be4f-456c-ba9f-c9c709f7000c
+[dependabot_report_demo]: ../assets/dependabot_report_demo.png?raw=true
