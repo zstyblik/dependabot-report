@@ -218,7 +218,8 @@ def main():
     dt_now = datetime.now(timezone.utc)
     context["report_mtime"] = dt_now.strftime("%Y-%m-%d %H:%M:%S%z")
     context["timing_sec"] = "{:.2f}".format(time.perf_counter() - timer_start)
-    render_template(context, args.template_fname, args.output_file)
+    with open(args.output_file, "w", encoding="utf-8") as fhandle:
+        render_template(context, args.template_fname, fhandle)
 
 
 def parse_args() -> argparse.Namespace:
@@ -237,7 +238,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-file",
         required=True,
-        type=argparse.FileType("w", encoding="utf-8"),
+        type=str,
         help="Write HTML report into given file.",
     )
     parser.add_argument(
