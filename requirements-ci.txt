@@ -2,9 +2,9 @@
 
 # lint
 black==25.9.0
-flake8
-flake8-docstrings
-flake8-import-order
-reorder-python-imports
+flake8==7.1.1
+flake8-docstrings==1.7.0
+flake8-import-order==0.18.2
+reorder-python-imports==3.13.0
 # tests
-pytest
+pytest==8.3.3
